@@ -43,3 +43,24 @@ PRISONERS_DILEMMA = {
         columns=prisoners_actions,
     ),
 }
+
+stag_hunt_actions = ["Stag", "Hare"]
+STAG_HUNT = {
+    "actions": stag_hunt_actions,
+    "p1_payoffs": pd.DataFrame(
+        [
+            [4, 1],
+            [3, 2],
+        ],
+        index=stag_hunt_actions,
+        columns=stag_hunt_actions,
+    ),
+    "p2_payoffs": pd.DataFrame(
+        [
+            [4, 3],
+            [1, 2],
+        ],
+        index=stag_hunt_actions,
+        columns=stag_hunt_actions,
+    ),
+}

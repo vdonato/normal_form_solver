@@ -17,8 +17,9 @@ game = st.selectbox(
     "Select a game",
     [
         "Custom Game",
-        "Rock-Paper-Scissors",
+        "Rock Paper Scissors",
         "Prisoners Dilemma",
+        "Stag Hunt",
     ],
 )
 
@@ -28,7 +29,7 @@ if game == "Custom Game":
     p1_payoffs = pd.DataFrame(0, index=actions, columns=actions)
     p2_payoffs = pd.DataFrame(0, index=actions, columns=actions)
 
-elif game == "Rock-Paper-Scissors":
+elif game == "Rock Paper Scissors":
     actions = presets.ROCK_PAPER_SCISSORS["actions"]
     p1_payoffs = presets.ROCK_PAPER_SCISSORS["p1_payoffs"]
     p2_payoffs = presets.ROCK_PAPER_SCISSORS["p2_payoffs"]
@@ -37,6 +38,14 @@ elif game == "Prisoners Dilemma":
     actions = presets.PRISONERS_DILEMMA["actions"]
     p1_payoffs = presets.PRISONERS_DILEMMA["p1_payoffs"]
     p2_payoffs = presets.PRISONERS_DILEMMA["p2_payoffs"]
+
+elif game == "Stag Hunt":
+    actions = presets.STAG_HUNT["actions"]
+    p1_payoffs = presets.STAG_HUNT["p1_payoffs"]
+    p2_payoffs = presets.STAG_HUNT["p2_payoffs"]
+
+else:
+    raise ValueError("Invalid game")
 
 
 # List of bugs:
