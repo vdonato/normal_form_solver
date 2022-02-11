@@ -1,5 +1,7 @@
 # normal_form_solver
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/vdonato/normal_form_solver)
+
 A regret matching-based Nash Equilibrium solver for 2-player, normal-form games.
 This app was built for Streamlit's Q1 2022 hackathon as an application of the
 experimental `st.data_editor` feature.
