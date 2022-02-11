@@ -7,11 +7,7 @@ def regret_matching_strategy(cum_regret, cum_strategy):
     normalizing_sum = sum(strategy)
 
     if normalizing_sum == 0:
-        # On the first iteration, we just play a pure strategy that picks the
-        # first action for simplicity. There's a chance that this might run into
-        # some weird boundary condition for certain games so that the strategy
-        # doesn't converge, but I haven't run into this in practice.
-        strategy[0] = 1
+        strategy = np.ones(len(strategy)) / len(strategy)
     else:
         strategy /= normalizing_sum
 
