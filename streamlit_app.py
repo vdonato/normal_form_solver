@@ -16,13 +16,19 @@ st.write(
 game = st.selectbox(
     "Select a game",
     [
+        "Custom Game",
         "Rock-Paper-Scissors",
         "Prisoners Dilemma",
-        "Custom Game",
     ],
 )
 
-if game == "Rock-Paper-Scissors":
+if game == "Custom Game":
+    actions = st.text_input("Enter comma separated actions:")
+    actions = [m.strip() for m in actions.split(",") if m != ""]
+    p1_payoffs = pd.DataFrame(0, index=actions, columns=actions)
+    p2_payoffs = pd.DataFrame(0, index=actions, columns=actions)
+
+elif game == "Rock-Paper-Scissors":
     actions = presets.ROCK_PAPER_SCISSORS["actions"]
     p1_payoffs = presets.ROCK_PAPER_SCISSORS["p1_payoffs"]
     p2_payoffs = presets.ROCK_PAPER_SCISSORS["p2_payoffs"]
@@ -31,12 +37,6 @@ elif game == "Prisoners Dilemma":
     actions = presets.PRISONERS_DILEMMA["actions"]
     p1_payoffs = presets.PRISONERS_DILEMMA["p1_payoffs"]
     p2_payoffs = presets.PRISONERS_DILEMMA["p2_payoffs"]
-
-elif game == "Custom Game":
-    actions = st.text_input("Enter comma separated actions:")
-    actions = [m.strip() for m in actions.split(",") if m != ""]
-    p1_payoffs = pd.DataFrame(0, index=actions, columns=actions)
-    p2_payoffs = pd.DataFrame(0, index=actions, columns=actions)
 
 
 # List of bugs:
@@ -53,6 +53,13 @@ if len(actions) > 0:
         p2_payoffs = st.data_editor(p2_payoffs, key="p2_payoffs")
         st.write(p2_payoffs)
 
-    # TODO: Add some nice plots to show the strategies converging to equilibrium.
     if st.button("Solve!"):
-        st.write(solve(actions, p1_payoffs, p2_payoffs))
+        solution, strategy_samples = solve(actions, p1_payoffs, p2_payoffs)
+        st.write("#### (Approximate) Nash Equilibrium Solution")
+        st.write(solution)
+
+        st.write("#### P1 Strategy vs Iterations")
+        st.line_chart(strategy_samples["p1"])
+
+        st.write("#### P2 Strategy vs Iterations")
+        st.line_chart(strategy_samples["p2"])

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def regret_matching_strategy(cum_regret, cum_strategy):
@@ -39,15 +40,49 @@ def calculate_regrets(my_action, opp_action, actions, payoff_matrix, row_player=
     return regrets
 
 
-def solve(actions, p1_payoffs, p2_payoffs, iterations=20_000):
+def average_strategy(actions, cum_strategies, iterations):
+    return {
+        p: {
+            actions[i]: cum_freq / iterations
+            for i, cum_freq in enumerate(cum_strategies[p])
+        }
+        for p in ["p1", "p2"]
+    }
+
+
+def solve(actions, p1_payoffs, p2_payoffs, iterations=10_000):
     num_actions = len(p1_payoffs)
 
     cum_regrets = {"p1": np.zeros(num_actions), "p2": np.zeros(num_actions)}
     cum_strategies = {"p1": np.zeros(num_actions), "p2": np.zeros(num_actions)}
+    strategy_samples = {"p1": pd.DataFrame(), "p2": pd.DataFrame()}
 
-    for _ in range(iterations):
+    for i in range(iterations):
         p1_strategy = regret_matching_strategy(cum_regrets["p1"], cum_strategies["p1"])
         p2_strategy = regret_matching_strategy(cum_regrets["p2"], cum_strategies["p2"])
+
+        if i == 0:
+            p1_sample = p1_strategy
+            p2_sample = p2_strategy
+        else:
+            avg_strats = average_strategy(actions, cum_strategies, i)
+            p1_sample = avg_strats["p1"]
+            p2_sample = avg_strats["p2"]
+
+        strategy_samples["p1"] = pd.concat(
+            [
+                strategy_samples["p1"],
+                pd.DataFrame([p1_sample], columns=actions),
+            ],
+            ignore_index=True,
+        )
+        strategy_samples["p2"] = pd.concat(
+            [
+                strategy_samples["p2"],
+                pd.DataFrame([p2_sample], columns=actions),
+            ],
+            ignore_index=True,
+        )
 
         cum_strategies["p1"] += p1_strategy
         cum_strategies["p2"] += p2_strategy
@@ -62,10 +97,4 @@ def solve(actions, p1_payoffs, p2_payoffs, iterations=20_000):
             p2_action, p1_action, actions, p2_payoffs, row_player=False
         )
 
-    return {
-        p: {
-            actions[i]: cum_freq / iterations
-            for i, cum_freq in enumerate(cum_strategies[p])
-        }
-        for p in ["p1", "p2"]
-    }
+    return average_strategy(actions, cum_strategies, iterations), strategy_samples
