@@ -46,7 +46,7 @@ def average_strategy(actions, cum_strategies, iterations):
     }
 
 
-def solve(actions, p1_payoffs, p2_payoffs, iterations=10_000):
+def solve(actions, p1_payoffs, p2_payoffs, iterations=5_000):
     num_actions = len(p1_payoffs)
 
     cum_regrets = {"p1": np.zeros(num_actions), "p2": np.zeros(num_actions)}
